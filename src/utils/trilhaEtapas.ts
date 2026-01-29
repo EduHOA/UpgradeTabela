@@ -154,12 +154,8 @@ export function tocarMotivacao(): void {
   if (ctx.state !== 'running') return
 
   const C4 = 262
-  const D4 = 294
   const E4 = 330
-  const F4 = 349
   const G4 = 392
-  const A4 = 440
-  const B4 = 494
   const C5 = 523
   const E5 = 659
   const G5 = 784

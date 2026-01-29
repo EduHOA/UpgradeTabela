@@ -77,7 +77,7 @@ const LABEL_EIXO_Y_PADRAO = 'Número de Expositores Inscritos'
 export function PlacarMCI({
   titulo,
   mciDescricao,
-  metaTotal,
+  metaTotal: _metaTotal,
   progressoAtual,
   semanasRestantes,
   dadosProgresso,
@@ -189,7 +189,7 @@ export function PlacarMCI({
               stroke={COR_META}
               strokeWidth={2}
               strokeDasharray="6 4"
-              dot={{ fill: COR_META, r: 3, shape: 'triangle' }}
+              dot={{ fill: COR_META, r: 3 }}
               activeDot={{ r: 5 }}
               isAnimationActive={true}
             />
