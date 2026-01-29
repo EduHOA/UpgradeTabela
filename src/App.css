@@ -1,0 +1,343 @@
+.app {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+}
+
+.app-btn-motivacao {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #c9a227 0%, #a67c00 100%);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(201, 162, 39, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.app-btn-motivacao:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.5);
+}
+
+.app-btn-motivacao:disabled {
+  opacity: 0.9;
+  cursor: default;
+}
+
+.titulo-concurso {
+  text-align: center;
+  color: #c9a227;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.app-config {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.app-fotos {
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.app-fotos-titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.app-fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .app-fotos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.app-upload-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.app-upload-card-titulo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.app-upload-card-desc {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.app-upload-area {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.app-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background: #c9a227;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.app-upload-btn:hover {
+  background: #b8921f;
+}
+
+.app-upload-btn-secondary {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  background: #6c757d;
+}
+
+.app-upload-btn-secondary:hover {
+  background: #5a6268;
+}
+
+.app-upload-input-hidden {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.app-upload-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-upload-preview img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #dee2e6;
+}
+
+.app-semanas-config {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.app-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.app-campo label {
+  font-size: 0.875rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.app-campo input[type="number"] {
+  width: 6rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.app-campo input[type="number"]:focus {
+  outline: none;
+  border-color: #c9a227;
+  box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.2);
+}
+
+.app-campo-readonly {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.app-semanas-restantes-valor {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.app-semanas-restantes-hint {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.app-tempo-por-semana {
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.app-tempo-por-semana-titulo {
+  display: block;
+  font-size: 0.875rem;
+  color: #555;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.app-tempo-por-semana-desc {
+  display: block;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.app-tempo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+.app-campo-inline label {
+  font-size: 0.8rem;
+}
+
+.app-campo-inline input[type="number"] {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Frase do momento — dinâmica e engraçada */
+.app-frase {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+  border-radius: 12px;
+  border: 1px solid #f0e6c8;
+  box-shadow: 0 2px 12px rgba(201, 162, 39, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.app-frase:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(201, 162, 39, 0.15);
+}
+
+.app-frase-meta {
+  background: linear-gradient(135deg, #e8f5e9 0%, #fff 100%);
+  border-color: #c8e6c9;
+  animation: app-frase-pulse 2s ease-in-out infinite;
+}
+
+@keyframes app-frase-pulse {
+  0%, 100% { box-shadow: 0 2px 12px rgba(76, 175, 80, 0.2); }
+  50% { box-shadow: 0 4px 20px rgba(76, 175, 80, 0.35); }
+}
+
+.app-frase-emoji {
+  font-size: 1.75rem;
+  line-height: 1;
+  animation: app-frase-bounce 1.5s ease-in-out infinite;
+}
+
+.app-frase-meta .app-frase-emoji {
+  animation: app-frase-bounce 0.8s ease-in-out infinite;
+}
+
+@keyframes app-frase-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.app-frase-texto {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1;
+  min-width: 0;
+}
+
+.app-frase-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #2e7d32;
+  background: rgba(76, 175, 80, 0.2);
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  animation: app-frase-badge 1.5s ease-in-out infinite;
+}
+
+@keyframes app-frase-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.app-frase-sons {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid #c9a227;
+  background: rgba(201, 162, 39, 0.15);
+  color: #7d6510;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.app-frase-sons:hover {
+  background: rgba(201, 162, 39, 0.25);
+}
+
+.app-frase-sons-ok {
+  font-size: 1rem;
+  opacity: 0.8;
+}

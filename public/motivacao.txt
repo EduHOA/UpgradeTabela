@@ -1,0 +1,6 @@
+Coloque aqui o arquivo da música Eye of the Tiger (Survivor).
+
+Nome do arquivo: motivacao.mp3
+
+O botão "Motivação" no placar tocará Eye of the Tiger por 30 segundos.
+Se o arquivo não existir, será usada a trilha sintetizada padrão.
