@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { PlacarMCI } from './components/PlacarMCI'
 import { getEtapa, tocarTrilhaEtapa, resumeAudio, tocarMotivacao, getDuracaoMotivacaoSeg } from './utils/trilhaEtapas'
+import { getImagemClientePorEtapa } from './utils/imagensCliente'
 import './App.css'
 
 const mciDescricao = (
@@ -31,6 +32,7 @@ const META_FINAL_HORAS = 2
 const REDUCAO_MAXIMA_HORAS = META_INICIAL_HORAS - META_FINAL_HORAS // 3h
 
 function fraseDoMomento(horas: number): { texto: string; emoji: string; metaBatida: boolean } {
+  if (horas > META_INICIAL_HORAS) return { texto: 'Tempo de produção aumentou — vamos reduzir de novo!', emoji: '📈', metaBatida: false }
   if (horas <= META_FINAL_HORAS) return { texto: 'Além da meta! O cliente está sorrindo!', emoji: '🎉', metaBatida: true }
   if (horas <= 2.2) return { texto: 'Você É o Flash! Meta batida!', emoji: '🏃‍♂️💨', metaBatida: true }
   if (horas <= 2.5) return { texto: 'Quase no ritmo do Flash!', emoji: '⚡', metaBatida: false }
@@ -72,20 +74,35 @@ function App() {
     [numSemanas]
   )
 
+  const reducaoAcumuladaPorSemana = useMemo(() => {
+    const acum: Record<number, number> = {}
+    let soma = 0
+    for (let s = numSemanas; s >= 1; s--) {
+      const v = tempoPorSemana[s]
+      const reducaoSemana = parseFloat(String(v ?? ''))
+      if (!Number.isNaN(reducaoSemana)) {
+        if (reducaoSemana >= 0) {
+          soma += Math.min(REDUCAO_MAXIMA_HORAS - soma, reducaoSemana)
+        } else {
+          soma += reducaoSemana
+        }
+      }
+      acum[s] = soma
+    }
+    return acum
+  }, [numSemanas, tempoPorSemana])
+
   const dadosProgresso = useMemo(
     () =>
       semanasArray.map((semana) => {
-        const reducaoDigitada = parseFloat(String(tempoPorSemana[semana] ?? ''))
-        const reducao =
-          !Number.isNaN(reducaoDigitada) && reducaoDigitada >= 0
-            ? Math.min(REDUCAO_MAXIMA_HORAS, reducaoDigitada)
-            : semana === numSemanas
-              ? 0
-              : 0
-        const tempoProducao = META_INICIAL_HORAS - reducao
-        return { semana, valor: Math.max(META_FINAL_HORAS, Math.min(META_INICIAL_HORAS, tempoProducao)) }
+        const reducaoAcumulada = reducaoAcumuladaPorSemana[semana] ?? 0
+        const tempoProducao = META_INICIAL_HORAS - reducaoAcumulada
+        return {
+          semana,
+          valor: Math.max(0, tempoProducao),
+        }
       }),
-    [semanasArray, tempoPorSemana, numSemanas]
+    [semanasArray, reducaoAcumuladaPorSemana]
   )
 
   const dadosMeta = useMemo(() => {
@@ -103,22 +120,15 @@ function App() {
       const v = tempoPorSemana[semana]
       if (v === undefined || v === '') return false
       const n = parseFloat(String(v))
-      return !Number.isNaN(n) && n >= 0
+      return !Number.isNaN(n)
     })
     return comValor.length > 0 ? Math.min(...comValor) : numSemanas
   }, [semanasArray, numSemanas, tempoPorSemana])
 
   const progressoAtual = useMemo(() => {
-    const v = tempoPorSemana[semanasRestantes]
-    const reducaoDigitada = parseFloat(String(v ?? ''))
-    const reducao =
-      !Number.isNaN(reducaoDigitada) && reducaoDigitada >= 0
-        ? Math.min(REDUCAO_MAXIMA_HORAS, reducaoDigitada)
-        : semanasRestantes === numSemanas
-          ? 0
-          : 0
-    return META_INICIAL_HORAS - reducao
-  }, [tempoPorSemana, semanasRestantes, numSemanas])
+    const reducaoAcumulada = reducaoAcumuladaPorSemana[semanasRestantes] ?? 0
+    return META_INICIAL_HORAS - reducaoAcumulada
+  }, [reducaoAcumuladaPorSemana, semanasRestantes])
 
   const { texto: fraseTexto, emoji: fraseEmoji, metaBatida } = useMemo(
     () => fraseDoMomento(progressoAtual),
@@ -143,6 +153,11 @@ function App() {
 
   const audioMotivacaoRef = useRef<HTMLAudioElement | null>(null)
   const duracaoMotivacaoMs = getDuracaoMotivacaoSeg() * 1000
+
+  const imagemCliente = useMemo(
+    () => fotoClienteUrl ?? getImagemClientePorEtapa(etapaAtual),
+    [fotoClienteUrl, etapaAtual]
+  )
 
   const handleMotivacao = useCallback(() => {
     if (motivacaoTocando) return
@@ -195,7 +210,7 @@ function App() {
           <div className="app-fotos-grid">
             <div className="app-upload-card">
               <span className="app-upload-card-titulo">Foto do cliente</span>
-              <span className="app-upload-card-desc">Substitui o bode na linha da meta (recomendado 640×640)</span>
+              <span className="app-upload-card-desc">Na linha da meta. Se não enviar, a imagem muda sozinha: Primeiras Etapas → Meio do Caminho → Quase Atingindo → Meta Atingida (recomendado 640×640)</span>
               <div className="app-upload-area">
                 {fotoClienteUrl ? (
                   <div className="app-upload-preview">
@@ -279,8 +294,8 @@ function App() {
         </div>
 
         <div className="app-tempo-por-semana">
-          <span className="app-tempo-por-semana-titulo">Redução já conquistada no tempo do relatório (horas) por semana</span>
-          <span className="app-tempo-por-semana-desc">Total de horas que já conseguimos diminuir na produção do relatório — 0 = ainda 5h, 3 = chegamos em 2h</span>
+          <span className="app-tempo-por-semana-titulo">Redução nesta semana (horas) — os valores vão somando</span>
+          <span className="app-tempo-por-semana-desc">Quanto diminuímos (+) ou aumentamos (−) naquela semana. Valor negativo = tempo de produção aumentou. Ex.: Semana 8 = 0,2h, Semana 7 = 0,5h → total 0,7h diminuídas</span>
           <div className="app-tempo-grid">
             {semanasArray.map((semana) => (
               <div key={semana} className="app-campo app-campo-inline">
@@ -288,13 +303,18 @@ function App() {
                 <input
                   id={`tempo-${semana}`}
                   type="number"
-                  min={0}
+                  min={-24}
                   max={REDUCAO_MAXIMA_HORAS}
                   step={0.1}
-                  placeholder="h (0→5h, 3→2h)"
-                  value={tempoPorSemana[semana] ?? (semana === numSemanas ? '0' : '')}
+                  placeholder="h (+ ou −)"
+                  value={tempoPorSemana[semana] ?? ''}
                   onChange={(e) => setTempoSemana(semana, e.target.value)}
                 />
+                {reducaoAcumuladaPorSemana[semana] != null && reducaoAcumuladaPorSemana[semana] !== 0 && (
+                  <span className="app-tempo-acumulado">
+                    Total: {reducaoAcumuladaPorSemana[semana] >= 0 ? '' : '−'}{Math.abs(reducaoAcumuladaPorSemana[semana]).toFixed(1)}h
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -323,10 +343,10 @@ function App() {
         semanasRestantes={semanasRestantes}
         dadosProgresso={dadosProgresso}
         dadosMeta={dadosMeta}
-        maxEixoY={5}
+        maxEixoY={Math.max(5, Math.ceil(Math.max(progressoAtual, ...dadosProgresso.map((d) => d.valor))) + 1)}
         minEixoY={0}
         labelEixoY="Tempo de produção (horas)"
-        imagemCliente={fotoClienteUrl ?? undefined}
+        imagemCliente={imagemCliente}
         imagemProgresso={nossaFotoUrl ?? undefined}
       />
     </main>

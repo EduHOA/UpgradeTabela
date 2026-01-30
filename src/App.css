@@ -250,6 +250,14 @@
   min-width: 0;
 }
 
+.app-tempo-acumulado {
+  display: block;
+  font-size: 0.7rem;
+  color: #2e7d32;
+  margin-top: 0.15rem;
+  font-weight: 500;
+}
+
 /* Frase do momento — dinâmica e engraçada */
 .app-frase {
   display: flex;
